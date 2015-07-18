@@ -92,6 +92,8 @@ namespace STUploader
                 bin = new byte[s.Length];
                 /* read file contents */
                 await s.ReadAsync(bin, 0, bin.Length);
+                /* close file */
+                s.Close();
             /* error during read? */
             } catch (Exception) {
                 /* set message */
@@ -140,8 +142,11 @@ namespace STUploader
             } finally {
                 /* close port */
                 stb.Close();
+
                 /* re-enable button */
                 bWrite.Enabled = true;
+                /* set focus */
+                bWrite.Focus();
             }
         }
 
@@ -165,16 +170,6 @@ namespace STUploader
         {
             /* convert from string */
             baudRate = uint.Parse((string)cbBauds.SelectedItem);
-        }
-
-        /* set focus if button was enabled */
-        private void bWrite_EnabledChanged(object sender, EventArgs e)
-        {
-            /* button was enabled?*/
-            if (bWrite.Enabled) {
-                /* set focus */
-                bWrite.Focus();
-            }
         }
 
         /* parse address */
@@ -240,7 +235,8 @@ namespace STUploader
 
         private void cbPorts_KeyDown(object sender, KeyEventArgs e)
         {
-            cbPorts.DroppedDown = true;
+            
+            //cbPorts.DroppedDown = true;
         }
     }
 }

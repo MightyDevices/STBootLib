@@ -165,11 +165,10 @@
             this.bWrite.Location = new System.Drawing.Point(9, 48);
             this.bWrite.Name = "bWrite";
             this.bWrite.Size = new System.Drawing.Size(273, 23);
-            this.bWrite.TabIndex = 1;
+            this.bWrite.TabIndex = 0;
             this.bWrite.Text = "Write Firmware && Jump";
             this.ttToolTip.SetToolTip(this.bWrite, "Uploads the firmware and jumps to it.");
             this.bWrite.UseVisualStyleBackColor = true;
-            this.bWrite.EnabledChanged += new System.EventHandler(this.bWrite_EnabledChanged);
             this.bWrite.Click += new System.EventHandler(this.bWrite_Click);
             // 
             // pbProgress
@@ -187,7 +186,7 @@
             this.groupBox4.Location = new System.Drawing.Point(12, 128);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(293, 50);
-            this.groupBox4.TabIndex = 4;
+            this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Options";
             // 
@@ -199,7 +198,7 @@
             this.cbxFlash.Location = new System.Drawing.Point(194, 22);
             this.cbxFlash.Name = "cbxFlash";
             this.cbxFlash.Size = new System.Drawing.Size(91, 17);
-            this.cbxFlash.TabIndex = 2;
+            this.cbxFlash.TabIndex = 1;
             this.cbxFlash.Text = "Flash Memory";
             this.ttToolTip.SetToolTip(this.cbxFlash, "Writing to flash memory?");
             this.cbxFlash.UseVisualStyleBackColor = true;
@@ -209,7 +208,7 @@
             this.tbAddress.Location = new System.Drawing.Point(66, 20);
             this.tbAddress.Name = "tbAddress";
             this.tbAddress.Size = new System.Drawing.Size(112, 20);
-            this.tbAddress.TabIndex = 1;
+            this.tbAddress.TabIndex = 0;
             this.tbAddress.Text = "0x08000000";
             this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
             // 
@@ -228,7 +227,7 @@
             this.bOpenFile.Location = new System.Drawing.Point(194, 16);
             this.bOpenFile.Name = "bOpenFile";
             this.bOpenFile.Size = new System.Drawing.Size(88, 23);
-            this.bOpenFile.TabIndex = 2;
+            this.bOpenFile.TabIndex = 1;
             this.bOpenFile.Text = "Open File";
             this.ttToolTip.SetToolTip(this.bOpenFile, "Open firmware file");
             this.bOpenFile.UseVisualStyleBackColor = true;
@@ -240,7 +239,7 @@
             this.tbFileName.Location = new System.Drawing.Point(63, 18);
             this.tbFileName.Name = "tbFileName";
             this.tbFileName.Size = new System.Drawing.Size(115, 20);
-            this.tbFileName.TabIndex = 3;
+            this.tbFileName.TabIndex = 0;
             this.ttToolTip.SetToolTip(this.tbFileName, "File Name");
             // 
             // label1
