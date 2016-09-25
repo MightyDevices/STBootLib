@@ -39,6 +39,7 @@ namespace STUploader
 
             /* set default baurate selection */
             cbBauds.SelectedIndex = 6;
+            cbPSize.SelectedIndex = 0;
             /* set defaul address */
             address = baseAddress;
         }
@@ -46,12 +47,23 @@ namespace STUploader
         /* drop down list opened */
         private void cbPorts_DropDown(object sender, EventArgs e)
         {
-            /* get serial ports */
-            var names = SerialPort.GetPortNames();
             /* apply to combo box */
-            cbPorts.Items.Clear();
-            /* add all com ports */
-            cbPorts.Items.AddRange(names);
+            cbPorts.DataSource = SerialPort.GetPortNames();
+        }
+
+        /* port selection was altered */
+        private void cbPorts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            /* valid selection made? */
+            if (cbPorts.SelectedIndex == -1) {
+                /* nope, disable button */
+                bWrite.Enabled = bJump.Enabled = false;
+            } else {
+                /* store com port name */
+                portName = (string)cbPorts.SelectedItem;
+                /* enable button */
+                bWrite.Enabled = bJump.Enabled = true;
+            }
         }
 
         /* open file clicked */
@@ -68,102 +80,55 @@ namespace STUploader
             }
         }
 
+        /* jump button pressed */
+        private async void bJump_Click(object sender, EventArgs e)
+        {
+            /* disable button */
+            bJump.Enabled = bWrite.Enabled = false;
+            /* get port name */
+            string pName = (string)cbPorts.SelectedItem;
+            /* get baud rate */
+            uint bauds = uint.Parse((string)cbBauds.SelectedItem);
+            /* get address */
+            uint address = Convert.ToUInt32(tbAddress.Text, 16);
+
+            try {
+                /* try to upload */
+                await Jump(address);
+            } catch (Exception ex) {
+                /* set message */
+                UpdateStatus(true, ex.Message);
+            } finally {
+                bJump.Enabled = bWrite.Enabled = true;
+            }
+        }
+
         /* write clicked */
         private async void bWrite_Click(object sender, EventArgs e)
         {
-            /* binary file */
-            byte[] bin;
-            /* bootloader class instance */
-            STBoot stb = new STBoot();
-
             /* disable button */
-            bWrite.Enabled = false;
-            /* reset progress */
-            UpdateProgress(0);
-            /* reset status bar */
-            UpdateStatus(false, "");
+            bJump.Enabled = bWrite.Enabled = false;
+            /* get port name */
+            string pName = (string)cbPorts.SelectedItem;
+            /* get baud rate */
+            uint bauds = uint.Parse((string)cbBauds.SelectedItem);
+            /* get address */
+            uint address = Convert.ToUInt32(tbAddress.Text, 16);
 
-            /* read file */
             try {
-                /* try to open file */
-                var s = new FileStream(fileName, FileMode.Open, 
-                    FileAccess.Read);
-                /* prepare buffer */
-                bin = new byte[s.Length];
-                /* read file contents */
-                await s.ReadAsync(bin, 0, bin.Length);
-                /* close file */
-                s.Close();
-            /* error during read? */
-            } catch (Exception) {
-                /* set message */
-                UpdateStatus(true, "Error: Unable to read file");
-                /* restore button operation */
-                bWrite.Enabled = true;
-                /* not much to do next */
-                return;
-            }
-
-            /* perform the operation */
-            try {
-                /* open the port */
-                stb.Open(portName, baudRate);
-                /* initialize communication */
-                await stb.Initialize();
-                /* format message */
-                var s = string.Format("Connected: Ver: {0}, PID: 0x{1:X4}",
-                    stb.Version, stb.ProductID);
-                /* prepare message */
-                UpdateStatus(false, s);
-
-                /* accessing flash requires memory erase */
-                if (cbxFlash.Checked) {
-                    /* erase all necessary pages */
-                    for (uint i = 0; i < (bin.Length + 255) / 256; i++)
-                        await stb.ErasePage(i + page);
-                }
-
-                /* progress reporter */
-                var p = new Progress<STBootProgress>(UpateProgress);
-                /* write memory */
-                await stb.WriteMemory(address, bin, 0, bin.Length, p,
-                    CancellationToken.None);
-                /* set message */
-                UpdateStatus(false, string.Format("Success: {0} bytes written",
-                    bin.Length));
-
-                /* go! */
-                await stb.Jump(address);
-            /* catch all the exceptions here */
+                /* read file */
+                var bin = await ReadFile(fileName);
+                /* try to upload */
+                await UploadFile(pName, bauds, bin, address, address);
             } catch (Exception ex) {
-                /* set exception message */
-                UpdateStatus(true, "Error: "+ ex.Message);
-            /* dispose of port */
+                /* set message */
+                UpdateStatus(true, ex.Message);
             } finally {
-                /* close port */
-                stb.Close();
-
-                /* re-enable button */
-                bWrite.Enabled = true;
-                /* set focus */
-                bWrite.Focus();
+                bJump.Enabled = bWrite.Enabled = true;
             }
         }
 
-        /* port selection was altered */
-        private void cbPorts_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /* valid selection made? */
-            if (cbPorts.SelectedIndex == -1) {
-                /* nope, disable button */
-                bWrite.Enabled = false;
-            } else {
-                /* store com port name */
-                portName = (string)cbPorts.SelectedItem;
-                /* enable button */
-                bWrite.Enabled = true;
-            }
-        }
+
 
         /* baud rate changed */
         private void cbBauds_SelectedIndexChanged(object sender, EventArgs e)
@@ -205,8 +170,96 @@ namespace STUploader
             tbAddress.Text = string.Format("0x{0:X8}", address);
         }
 
+        /* load firmware file */
+        private async Task<byte[]> ReadFile(string fname)
+        {
+            byte[] bin;
+
+            /* open file */
+            using (var s = new FileStream(fname, FileMode.Open,
+                    FileAccess.Read)) {
+                /* allocate memory */
+                bin = new byte[s.Length];
+                /* read file contents */
+                await s.ReadAsync(bin, 0, bin.Length);
+            }
+
+            /* return binary image */
+            return bin;
+        }
+
+        /* upload a binary image to uC */
+        private async Task UploadFile(string portName, uint baudRate,
+            byte[] bin, uint address, uint jumpAddress)
+        {
+            /* get page size */
+            uint psize = uint.Parse(cbPSize.SelectedItem as string);
+
+            /* create new programming interface object */
+            using (var uc = new STBoot()) {
+                /* open device */
+                uc.Open(portName, baudRate);
+                /* initialize communication */
+                await uc.Initialize();
+                /* update the status */
+                UpdateStatus(false, string.Format("Connected: Ver: {0}, PID: 0x{1:X4}",
+                    uc.Version, uc.ProductID));
+                /* give some chance see the message */
+                await Task.Delay(500);
+
+                /* apply new message */
+                UpdateStatus(false, "Erasing...");
+
+                /* checked? */
+                if (cbxErase.Checked) {
+                    await uc.GlobalErase();
+                } else {
+                    /* erase operation */
+                    for (uint i = 0; i < bin.Length; i += psize) {
+                        /* erase page */
+                        await uc.ErasePage((i + address - 0x08000000) / psize);
+                        /* update progress bar */
+                        UpdateProgress((int)i * 100 / bin.Length);
+                    }
+                }
+
+                /* apply new message */
+                UpdateStatus(false, "Programming...");
+                /* progress reporter */
+                var p = new Progress<STBootProgress>(UpdateProgress);
+                /* write memory */
+                await uc.WriteMemory(address, bin, 0, bin.Length, p,
+                    CancellationToken.None);
+                /* update the status */
+                UpdateStatus(false, string.Format("Success: {0} bytes written",
+                    bin.Length));
+
+                /* go! */
+                await uc.Jump(jumpAddress);
+
+                /* end communication */
+                uc.Close();
+            }
+        }
+
+        /* execute code */
+        private async Task Jump(uint address)
+        {
+            /* create new programming interface object */
+            using (var uc = new STBoot()) {
+                /* open device */
+                uc.Open(portName, baudRate);
+                /* initialize communication */
+                await uc.Initialize();
+                /* go! */
+                await uc.Jump(address);
+                /* end communication */
+                uc.Close();
+            }
+        }
+
         /* set current progress */
-        private void UpateProgress(STBootProgress p)
+        private void UpdateProgress(STBootProgress p)
         {
             /* converts bytes to percentage */
             UpdateProgress(100 * p.bytesProcessed / p.bytesTotal);
@@ -233,10 +286,16 @@ namespace STUploader
             }
         }
 
-        private void cbPorts_KeyDown(object sender, KeyEventArgs e)
+        private void cbxErase_CheckedChanged(object sender, EventArgs e)
         {
-            
-            //cbPorts.DroppedDown = true;
+
         }
+
+        private void cbPSize_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
     }
 }

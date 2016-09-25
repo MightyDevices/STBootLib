@@ -43,4 +43,22 @@ namespace STBootLib
         /* Disables the read protection */
         RD_UNPROTECT = 0x92
     }
+
+    /* special erase mode for normal erase command */
+    public enum STEraseMode
+    {
+        /* erase all sectors */
+        GLOBAL = 0xff,
+    }
+
+    /* special erase mode for normal erase command */
+    public enum STExtendedEraseMode
+    {
+        /* erase all sectors */
+        GLOBAL = 0xffff,
+        /* erase bank 1 */
+        BANK1 = 0xfffe,
+        /* erase bank 2 */
+        BANK2 = 0xfffd
+    }
 }

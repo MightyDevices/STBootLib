@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM32 Flash Loader", "STM32 Flash Loader\STM32 Flash Loader.csproj", "{975D7D83-56AE-4A64-865E-BCD9096B05C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STBootLib", "STBootLib\STBootLib.csproj", "{8EC66A52-5978-481D-A80D-D75CBC6DE918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{975D7D83-56AE-4A64-865E-BCD9096B05C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{975D7D83-56AE-4A64-865E-BCD9096B05C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{975D7D83-56AE-4A64-865E-BCD9096B05C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

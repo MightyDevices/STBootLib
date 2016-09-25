@@ -85,6 +85,21 @@ namespace STBootLib
             await GetID();
         }
 
+        /* unprotect memory */
+        public async Task Unprotect()
+        {
+            /* no support for unprotect? */
+            if (!Commands.Contains(STCmds.WR_UNPROTECT))
+                throw new STBootException("Command not supported");
+
+            /* no support for unprotect? */
+            if (!Commands.Contains(STCmds.RD_UNPROTECT))
+                throw new STBootException("Command not supported");
+
+            await ReadUnprotect();
+            await WriteUnprotect();
+        }
+
         /* read memory */
         public async Task ReadMemory(uint address, byte[] buf, int offset, 
             int size, IProgress<int> p, CancellationToken ct)
@@ -160,6 +175,21 @@ namespace STBootLib
             } else if (Commands.Contains(STCmds.EXT_ERASE)) {
                 await ExtendedErase(pageNumber);
             /* no operation supported */
+            } else {
+                throw new STBootException("Command not supported");
+            }
+        }
+
+        /* perform global erase */
+        public async Task GlobalErase()
+        {
+            /* 'classic' erase operation supported? */
+            if (Commands.Contains(STCmds.ERASE)) {
+                await EraseSpecial(STEraseMode.GLOBAL);
+                /* 'extended' erase operation supported? */
+            } else if (Commands.Contains(STCmds.EXT_ERASE)) {
+                await ExtendedEraseSpecial(STExtendedEraseMode.GLOBAL);
+                /* no operation supported */
             } else {
                 throw new STBootException("Command not supported");
             }
@@ -571,6 +601,54 @@ namespace STBootLib
             sem.Release();
         }
 
+        /* erase memory page */
+        private async Task EraseSpecial(STEraseMode mode)
+        {
+            /* command word */
+            var tx = new byte[4];
+            /* temporary storage for response bytes */
+            var tmp = new byte[1];
+
+            /* command code */
+            tx[0] = (byte)STCmds.ERASE;
+            /* checksum */
+            tx[1] = ComputeChecksum(tx, 0, 1);
+
+            /* erase single page */
+            tx[2] = (byte)((int)mode);
+            /* checksum */
+            tx[3] = (byte)~ComputeChecksum(tx, 2, 2);
+
+            /* try to send command and wait for response */
+            try {
+                /* send bytes */
+                await SerialWrite(tx, 0, 2);
+                /* wait for response code */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Command Rejected");
+
+                /* send address */
+                await SerialWrite(tx, 2, 2);
+                /* wait for response code */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Special Code Rejected");
+
+                /* oops, something baaad happened! */
+            } catch (Exception) {
+                /* release semaphore */
+                sem.Release();
+                /* re-throw */
+                throw;
+            }
+
+            /* release semaphore */
+            sem.Release();
+        }
+
         /* extended erase memory page */
         private async Task ExtendedErase(uint pageNumber)
         {
@@ -588,8 +666,8 @@ namespace STBootLib
             tx[2] = 0;
             tx[3] = 0;
             /* set page number */
-            tx[4] = 0;
-            tx[5] = (byte)pageNumber;
+            tx[4] = (byte)(pageNumber >> 8);
+            tx[5] = (byte)(pageNumber >> 0);
             /* checksum */
             tx[6] = (byte)~ComputeChecksum(tx, 2, 5);
 
@@ -605,11 +683,62 @@ namespace STBootLib
 
                 /* send address */
                 await SerialWrite(tx, 2, 5);
-                /* wait for response code */
-                await SerialRead(tmp, 0, 1);
+                /* wait for response code. use longer timeout, erase might
+                 * take a while or two. */
+                await SerialRead(tmp, 0, 1, 3000);
                 /* check response code */
                 if (tmp[0] != (byte)STResps.ACK) 
                     throw new STBootException("Page Rejected");
+
+            /* oops, something baaad happened! */
+            } catch (Exception) {
+                /* release semaphore */
+                sem.Release();
+                /* re-throw */
+                throw;
+            }
+
+            /* release semaphore */
+            sem.Release();
+        }
+
+        /* extended erase memory page */
+        private async Task ExtendedEraseSpecial(STExtendedEraseMode mode)
+        {
+            /* command word */
+            var tx = new byte[5];
+            /* temporary storage for response bytes */
+            var tmp = new byte[1];
+
+            /* command code */
+            tx[0] = (byte)STCmds.EXT_ERASE;
+            /* checksum */
+            tx[1] = ComputeChecksum(tx, 0, 1);
+
+            /* erase single page */
+            tx[2] = (byte)((int)mode >> 8);
+            tx[3] = (byte)((int)mode >> 0);
+            /* checksum */
+            tx[4] = (byte)~ComputeChecksum(tx, 2, 3);
+
+            /* try to send command and wait for response */
+            try {
+                /* send bytes */
+                await SerialWrite(tx, 0, 2);
+                /* wait for response code */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Command Rejected");
+
+                /* send address */
+                await SerialWrite(tx, 2, 3);
+                /* wait for response code. use longer timeout, erase might
+                 * take a while or two. */
+                await SerialRead(tmp, 0, 1, 10000);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Special code Rejected");
 
                 /* oops, something baaad happened! */
             } catch (Exception) {
@@ -621,6 +750,80 @@ namespace STBootLib
 
             /* release semaphore */
             sem.Release();
+        }
+
+        /* unprotect flash before writing */
+        private async Task WriteUnprotect()
+        {
+            /* command word */
+            var tx = new byte[2];
+            /* temporary storage for response bytes */
+            var tmp = new byte[1];
+
+            /* command code */
+            tx[0] = (byte)STCmds.WR_UNPROTECT;
+            /* checksum */
+            tx[1] = ComputeChecksum(tx, 0, 1);
+
+            /* try to send command and wait for response */
+            try {
+                /* send bytes */
+                await SerialWrite(tx, 0, 2);
+                /* wait for response code */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Command Rejected");
+
+                /* wait for response code. use longer timeout, erase might
+                 * take a while or two. */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Write Unprotect Rejected");
+
+                /* oops, something baaad happened! */
+            } finally {
+                /* release semaphore */
+                sem.Release();
+            }
+        }
+
+        /* unprotect flash before reading */
+        private async Task ReadUnprotect()
+        {
+            /* command word */
+            var tx = new byte[2];
+            /* temporary storage for response bytes */
+            var tmp = new byte[1];
+
+            /* command code */
+            tx[0] = (byte)STCmds.RD_UNPROTECT;
+            /* checksum */
+            tx[1] = ComputeChecksum(tx, 0, 1);
+
+            /* try to send command and wait for response */
+            try {
+                /* send bytes */
+                await SerialWrite(tx, 0, 2);
+                /* wait for response code */
+                await SerialRead(tmp, 0, 1);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Command Rejected");
+
+                /* wait for response code. use longer timeout, erase might
+                 * take a while or two. */
+                await SerialRead(tmp, 0, 10000);
+                /* check response code */
+                if (tmp[0] != (byte)STResps.ACK)
+                    throw new STBootException("Write Unprotect Rejected");
+
+                /* oops, something baaad happened! */
+            } finally {
+                /* release semaphore */
+                sem.Release();
+            }
         }
 
         /* compute checksum */
@@ -646,8 +849,14 @@ namespace STBootLib
             await bs.WriteAsync(data, offset, count);
         }
 
-        /* read 'length' number of bytes from serial port */
+        /* standard read with timeout equal to 1s */
         private async Task SerialRead(byte[] data, int offset, int count)
+        {
+            await SerialRead(data, offset, count, 1000);
+        }
+
+        /* read 'length' number of bytes from serial port */
+        private async Task SerialRead(byte[] data, int offset, int count, int timeout)
         {
             /* shorter name */
             var bs = sp.BaseStream;
@@ -660,7 +869,7 @@ namespace STBootLib
                 try {
                     /* prepare task */
                     br += await bs.ReadAsync(data, offset + br, count - br).
-                        WithTimeout(1000);
+                        WithTimeout(timeout);
                 /* got handling? */
                 } catch (OperationCanceledException) {
                     /* rethrow */

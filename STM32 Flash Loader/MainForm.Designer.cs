@@ -37,12 +37,15 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bJump = new System.Windows.Forms.Button();
             this.lProgress = new System.Windows.Forms.Label();
             this.bWrite = new System.Windows.Forms.Button();
             this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.ofdOpen = new System.Windows.Forms.OpenFileDialog();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.cbxFlash = new System.Windows.Forms.CheckBox();
+            this.cbPSize = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cbxErase = new System.Windows.Forms.CheckBox();
             this.tbAddress = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -120,13 +123,12 @@
             this.cbPorts.DropDown += new System.EventHandler(this.cbPorts_DropDown);
             this.cbPorts.SelectedIndexChanged += new System.EventHandler(this.cbPorts_SelectedIndexChanged);
             this.cbPorts.DropDownClosed += new System.EventHandler(this.cbPorts_SelectedIndexChanged);
-            this.cbPorts.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbPorts_KeyDown);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsslStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 278);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 310);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(315, 22);
             this.statusStrip1.TabIndex = 2;
@@ -140,15 +142,28 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.bJump);
             this.groupBox3.Controls.Add(this.lProgress);
             this.groupBox3.Controls.Add(this.bWrite);
             this.groupBox3.Controls.Add(this.pbProgress);
-            this.groupBox3.Location = new System.Drawing.Point(12, 184);
+            this.groupBox3.Location = new System.Drawing.Point(12, 224);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(293, 80);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Actions";
+            // 
+            // bJump
+            // 
+            this.bJump.Enabled = false;
+            this.bJump.Location = new System.Drawing.Point(149, 48);
+            this.bJump.Name = "bJump";
+            this.bJump.Size = new System.Drawing.Size(133, 23);
+            this.bJump.TabIndex = 3;
+            this.bJump.Text = "Jump";
+            this.ttToolTip.SetToolTip(this.bJump, "Uploads the firmware and jumps to it.");
+            this.bJump.UseVisualStyleBackColor = true;
+            this.bJump.Click += new System.EventHandler(this.bJump_Click);
             // 
             // lProgress
             // 
@@ -164,7 +179,7 @@
             this.bWrite.Enabled = false;
             this.bWrite.Location = new System.Drawing.Point(9, 48);
             this.bWrite.Name = "bWrite";
-            this.bWrite.Size = new System.Drawing.Size(273, 23);
+            this.bWrite.Size = new System.Drawing.Size(133, 23);
             this.bWrite.TabIndex = 0;
             this.bWrite.Text = "Write Firmware && Jump";
             this.ttToolTip.SetToolTip(this.bWrite, "Uploads the firmware and jumps to it.");
@@ -180,28 +195,53 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.cbxFlash);
+            this.groupBox4.Controls.Add(this.cbPSize);
+            this.groupBox4.Controls.Add(this.label5);
+            this.groupBox4.Controls.Add(this.cbxErase);
             this.groupBox4.Controls.Add(this.tbAddress);
             this.groupBox4.Controls.Add(this.label4);
             this.groupBox4.Location = new System.Drawing.Point(12, 128);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(293, 50);
+            this.groupBox4.Size = new System.Drawing.Size(293, 90);
             this.groupBox4.TabIndex = 2;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Options";
             // 
-            // cbxFlash
+            // cbPSize
             // 
-            this.cbxFlash.AutoSize = true;
-            this.cbxFlash.Checked = true;
-            this.cbxFlash.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbxFlash.Location = new System.Drawing.Point(194, 22);
-            this.cbxFlash.Name = "cbxFlash";
-            this.cbxFlash.Size = new System.Drawing.Size(91, 17);
-            this.cbxFlash.TabIndex = 1;
-            this.cbxFlash.Text = "Flash Memory";
-            this.ttToolTip.SetToolTip(this.cbxFlash, "Writing to flash memory?");
-            this.cbxFlash.UseVisualStyleBackColor = true;
+            this.cbPSize.FormattingEnabled = true;
+            this.cbPSize.Items.AddRange(new object[] {
+            "256",
+            "128",
+            "2048"});
+            this.cbPSize.Location = new System.Drawing.Point(66, 53);
+            this.cbPSize.Name = "cbPSize";
+            this.cbPSize.Size = new System.Drawing.Size(112, 21);
+            this.cbPSize.TabIndex = 5;
+            this.ttToolTip.SetToolTip(this.cbPSize, "COM Port Name");
+            this.cbPSize.SelectedIndexChanged += new System.EventHandler(this.cbPSize_SelectedIndexChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(4, 56);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Page size:";
+            this.ttToolTip.SetToolTip(this.label5, "Destination address");
+            // 
+            // cbxErase
+            // 
+            this.cbxErase.AutoSize = true;
+            this.cbxErase.Location = new System.Drawing.Point(194, 22);
+            this.cbxErase.Name = "cbxErase";
+            this.cbxErase.Size = new System.Drawing.Size(86, 17);
+            this.cbxErase.TabIndex = 1;
+            this.cbxErase.Text = "Global Erase";
+            this.ttToolTip.SetToolTip(this.cbxErase, "Writing to flash memory?");
+            this.cbxErase.UseVisualStyleBackColor = true;
+            this.cbxErase.CheckedChanged += new System.EventHandler(this.cbxErase_CheckedChanged);
             // 
             // tbAddress
             // 
@@ -269,7 +309,7 @@
             this.AcceptButton = this.bWrite;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 300);
+            this.ClientSize = new System.Drawing.Size(315, 332);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
@@ -310,7 +350,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbBauds;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.CheckBox cbxFlash;
+        private System.Windows.Forms.CheckBox cbxErase;
         private System.Windows.Forms.TextBox tbAddress;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip ttToolTip;
@@ -318,6 +358,9 @@
         private System.Windows.Forms.Button bOpenFile;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox tbFileName;
+        private System.Windows.Forms.Button bJump;
+        private System.Windows.Forms.ComboBox cbPSize;
+        private System.Windows.Forms.Label label5;
         
     }
 }
