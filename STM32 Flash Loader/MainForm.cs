@@ -331,6 +331,9 @@ namespace STUploader
             /* get baud rate */
             uint bauds = uint.Parse((string)cbBauds.SelectedItem);
 
+            if (pName == null || pName == "")
+                return;
+
             var uc = new STBoot();
             /* open device */
             uc.Open(pName, bauds);
