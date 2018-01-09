@@ -53,11 +53,15 @@
             this.tbFileName = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.cmdMCUReset = new System.Windows.Forms.Button();
+            this.cmdMCUEnterBootState = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -128,7 +132,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsslStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 310);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 369);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(315, 22);
             this.statusStrip1.TabIndex = 2;
@@ -304,12 +308,44 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "File";
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.cmdMCUEnterBootState);
+            this.groupBox5.Controls.Add(this.cmdMCUReset);
+            this.groupBox5.Location = new System.Drawing.Point(12, 310);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(293, 52);
+            this.groupBox5.TabIndex = 4;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "MCU Actions";
+            // 
+            // cmdMCUReset
+            // 
+            this.cmdMCUReset.Location = new System.Drawing.Point(9, 19);
+            this.cmdMCUReset.Name = "cmdMCUReset";
+            this.cmdMCUReset.Size = new System.Drawing.Size(133, 23);
+            this.cmdMCUReset.TabIndex = 0;
+            this.cmdMCUReset.Text = "MCU Reset";
+            this.cmdMCUReset.UseVisualStyleBackColor = true;
+            this.cmdMCUReset.Click += new System.EventHandler(this.cmdMCUReset_Click);
+            // 
+            // cmdMCUEnterBootState
+            // 
+            this.cmdMCUEnterBootState.Location = new System.Drawing.Point(148, 19);
+            this.cmdMCUEnterBootState.Name = "cmdMCUEnterBootState";
+            this.cmdMCUEnterBootState.Size = new System.Drawing.Size(133, 23);
+            this.cmdMCUEnterBootState.TabIndex = 1;
+            this.cmdMCUEnterBootState.Text = "MCU Enter Boot State";
+            this.cmdMCUEnterBootState.UseVisualStyleBackColor = true;
+            this.cmdMCUEnterBootState.Click += new System.EventHandler(this.cmdMCUEnterBootState_Click);
+            // 
             // fMainForm
             // 
             this.AcceptButton = this.bWrite;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 332);
+            this.ClientSize = new System.Drawing.Size(315, 391);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
@@ -330,6 +366,7 @@
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -361,7 +398,9 @@
         private System.Windows.Forms.Button bJump;
         private System.Windows.Forms.ComboBox cbPSize;
         private System.Windows.Forms.Label label5;
-        
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Button cmdMCUReset;
+        private System.Windows.Forms.Button cmdMCUEnterBootState;
     }
 }
 

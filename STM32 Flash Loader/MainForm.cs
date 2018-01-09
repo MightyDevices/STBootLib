@@ -303,6 +303,43 @@ namespace STUploader
 
         }
 
+        private void cmdMCUReset_Click(object sender, EventArgs e)
+        {
+            /* get port name */
+            string pName = (string)cbPorts.SelectedItem;
+            /* get baud rate */
+            uint bauds = uint.Parse((string)cbBauds.SelectedItem);
 
+            if (pName == null || pName == "")
+                return;
+
+            var uc = new STBoot();
+            /* open device */
+            uc.Open(portName, baudRate);
+
+            /*Reset the chip via RTS and DTR --> DTR-Signal must be INVERTED!*/
+            uc.STM32ResetChip();
+
+            uc.Close();
+
+            }
+
+        private void cmdMCUEnterBootState_Click(object sender, EventArgs e)
+        {
+            /* get port name */
+            string pName = (string)cbPorts.SelectedItem;
+            /* get baud rate */
+            uint bauds = uint.Parse((string)cbBauds.SelectedItem);
+
+            var uc = new STBoot();
+            /* open device */
+            uc.Open(pName, bauds);
+
+            /*Reset the chip via RTS and DTR --> DTR-Signal must be INVERTED!*/
+            uc.STM32InitBoot();
+
+            uc.Close();
+
+        }
     }
 }
