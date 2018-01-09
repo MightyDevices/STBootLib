@@ -199,6 +199,10 @@ namespace STUploader
             using (var uc = new STBoot()) {
                 /* open device */
                 uc.Open(portName, baudRate);
+
+                /*Reset the chip via RTS and DTR --> DTR-Signal must be INVERTED!*/
+                uc.STM32InitBoot();
+
                 /* initialize communication */
                 await uc.Initialize();
                 /* update the status */
@@ -236,6 +240,9 @@ namespace STUploader
 
                 /* go! */
                 await uc.Jump(jumpAddress);
+
+                /*Reset the device in normal mode*/
+                uc.STM32ResetChip();
 
                 /* end communication */
                 uc.Close();

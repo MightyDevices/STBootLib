@@ -39,6 +39,38 @@ namespace STBootLib
             Dispose();
         }
 
+
+        public void STM32InitBoot()
+        {
+            setDTR(true);
+            Thread.Sleep(500);
+            setRTS(true);
+            Thread.Sleep(500);
+            setRTS(false);
+            Thread.Sleep(500);
+            setDTR(false);
+
+
+        }
+
+        public void STM32ResetChip()
+        {
+            setRTS(true);
+            Thread.Sleep(500);
+            setRTS(false);
+        }
+
+        private void setDTR(bool f)
+        {
+            sp.DtrEnable = f;
+        }
+
+
+        private void setRTS(bool f)
+        {
+            sp.RtsEnable = f;
+        }
+
         /* dispose implementation */
         public void Dispose()
         {

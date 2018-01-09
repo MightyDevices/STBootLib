@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F2A80228-9234-4748-A61B-F26D3C1EC7FA}</ProjectGuid>
+    <ProjectGuid>{975D7D83-56AE-4A64-865E-BCD9096B05C7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>STM32_Flash_Loader</RootNamespace>
