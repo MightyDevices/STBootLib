@@ -46,7 +46,8 @@
             this.cbPSize = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.cbxErase = new System.Windows.Forms.CheckBox();
-            this.tbAddress = new System.Windows.Forms.TextBox();
+            this.tbAddress = new System.Windows.Forms.ComboBox();
+            //this.tbAddress = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.bOpenFile = new System.Windows.Forms.Button();
@@ -193,6 +194,21 @@
             this.pbProgress.Size = new System.Drawing.Size(242, 23);
             this.pbProgress.TabIndex = 0;
             // 
+<<<<<<< Updated upstream
+=======
+            // bJump
+            // 
+            this.bJump.Enabled = false;
+            this.bJump.Location = new System.Drawing.Point(194, 53);
+            this.bJump.Name = "bJump";
+            this.bJump.Size = new System.Drawing.Size(84, 21);
+            this.bJump.TabIndex = 3;
+            this.bJump.Text = "EXT BOOT";
+            this.ttToolTip.SetToolTip(this.bJump, "Uploads the firmware and jumps to it.");
+            this.bJump.UseVisualStyleBackColor = true;
+            this.bJump.Click += new System.EventHandler(this.bJump_Click);
+            // 
+>>>>>>> Stashed changes
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.cbPSize);
@@ -245,12 +261,49 @@
             // 
             // tbAddress
             // 
+            // this.tbAddress.Location = new System.Drawing.Point(66, 20);
+            // this.tbAddress.Name = "tbAddress";
+            // this.tbAddress.Size = new System.Drawing.Size(112, 20);
+            // this.tbAddress.TabIndex = 0;
+            // this.tbAddress.FormattingEnabled = true;
+            // this.tbAddress.Items.AddRange(new object[] {
+            // "256",
+            // "128",
+            // "2048"});
+            //this.tbAddress.Text = "0x08000000";
+            // this.tbAddress.TextChanged += new System.EventHandler(this.tbAddress_TextChanged);
+            // this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
+
+            this.tbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tbAddress.FormattingEnabled = true;
+            this.tbAddress.Items.AddRange(new object[] {
+            "0x08000000",
+            "0x08008000"});
             this.tbAddress.Location = new System.Drawing.Point(66, 20);
             this.tbAddress.Name = "tbAddress";
             this.tbAddress.Size = new System.Drawing.Size(112, 20);
+<<<<<<< Updated upstream
             this.tbAddress.TabIndex = 0;
             this.tbAddress.Text = "0x08000000";
+=======
+            this.tbAddress.TabIndex = 1;
+            this.ttToolTip.SetToolTip(this.tbAddress, "Baudrate used for communication");
+            this.tbAddress.SelectedIndexChanged += new System.EventHandler(this.tbAddress_TextChanged);
+>>>>>>> Stashed changes
             this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
+            // 
+            // cbPorts
+            // 
+            this.cbPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPorts.FormattingEnabled = true;
+            this.cbPorts.Location = new System.Drawing.Point(63, 18);
+            this.cbPorts.Name = "cbPorts";
+            this.cbPorts.Size = new System.Drawing.Size(79, 21);
+            this.cbPorts.TabIndex = 0;
+            this.ttToolTip.SetToolTip(this.cbPorts, "COM Port Name");
+            this.cbPorts.DropDown += new System.EventHandler(this.cbPorts_DropDown);
+            this.cbPorts.SelectedIndexChanged += new System.EventHandler(this.cbPorts_SelectedIndexChanged);
+            this.cbPorts.DropDownClosed += new System.EventHandler(this.cbPorts_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -281,6 +334,7 @@
             this.tbFileName.Size = new System.Drawing.Size(115, 20);
             this.tbFileName.TabIndex = 0;
             this.ttToolTip.SetToolTip(this.tbFileName, "File Name");
+            this.tbFileName.TextChanged += new System.EventHandler(this.tbFileName_TextChanged);
             // 
             // label1
             // 
@@ -349,9 +403,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox cbBauds;
+        private System.Windows.Forms.ComboBox tbAddress;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox cbxErase;
-        private System.Windows.Forms.TextBox tbAddress;
+        //private System.Windows.Forms.TextBox tbAddress;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.Label label1;
