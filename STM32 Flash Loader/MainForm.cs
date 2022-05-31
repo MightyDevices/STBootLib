@@ -297,5 +297,14 @@ namespace STUploader
         }
 
 
+<<<<<<< Updated upstream
+=======
+        }
+
+        private void tbFileName_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+>>>>>>> Stashed changes
     }
 }
