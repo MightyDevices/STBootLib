@@ -296,6 +296,9 @@ namespace STUploader
 
         }
 
+        private void tbAddress_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }
