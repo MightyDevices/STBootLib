@@ -46,7 +46,8 @@
             this.cbPSize = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.cbxErase = new System.Windows.Forms.CheckBox();
-            this.tbAddress = new System.Windows.Forms.TextBox();
+            this.tbAddress = new System.Windows.Forms.ComboBox();
+           // this.tbAddress = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.bOpenFile = new System.Windows.Forms.Button();
@@ -183,11 +184,11 @@
             // bJump
             // 
             this.bJump.Enabled = false;
-            this.bJump.Location = new System.Drawing.Point(221, 53);
+            this.bJump.Location = new System.Drawing.Point(194, 53);
             this.bJump.Name = "bJump";
-            this.bJump.Size = new System.Drawing.Size(57, 21);
+            this.bJump.Size = new System.Drawing.Size(84, 21);
             this.bJump.TabIndex = 3;
-            this.bJump.Text = "Jump";
+            this.bJump.Text = "EXIT BOOT";
             this.ttToolTip.SetToolTip(this.bJump, "Uploads the firmware and jumps to it.");
             this.bJump.UseVisualStyleBackColor = true;
             this.bJump.Click += new System.EventHandler(this.bJump_Click);
@@ -247,12 +248,27 @@
             // 
             // tbAddress
             // 
+            //this.tbAddress.Location = new System.Drawing.Point(66, 20);
+           // this.tbAddress.Name = "tbAddress";
+           // this.tbAddress.Size = new System.Drawing.Size(112, 20);
+            //this.tbAddress.TabIndex = 0;
+           // this.tbAddress.Text = "0x08000000";
+           // this.tbAddress.TextChanged += new System.EventHandler(this.tbAddress_TextChanged);
+           // this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
+
+            // 
+
+            this.tbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tbAddress.FormattingEnabled = true;
+            this.tbAddress.Items.AddRange(new object[] {
+            "0x08000000",
+            "0x08008000"});
             this.tbAddress.Location = new System.Drawing.Point(66, 20);
             this.tbAddress.Name = "tbAddress";
             this.tbAddress.Size = new System.Drawing.Size(112, 20);
-            this.tbAddress.TabIndex = 0;
-            this.tbAddress.Text = "0x08000000";
-            this.tbAddress.TextChanged += new System.EventHandler(this.tbAddress_TextChanged);
+            this.tbAddress.TabIndex = 1;
+            this.ttToolTip.SetToolTip(this.tbAddress, "tbAddress used for communication");
+            this.cbBauds.SelectedIndexChanged += new System.EventHandler(this.tbAddress_TextChanged);
             this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
             // 
             // label4
@@ -354,7 +370,8 @@
         private System.Windows.Forms.ComboBox cbBauds;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox cbxErase;
-        private System.Windows.Forms.TextBox tbAddress;
+        private System.Windows.Forms.ComboBox tbAddress;
+        //private System.Windows.Forms.TextBox tbAddress;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolTip ttToolTip;
         private System.Windows.Forms.Label label1;
