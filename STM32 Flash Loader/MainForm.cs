@@ -40,6 +40,7 @@ namespace STUploader
             /* set default baurate selection */
             cbBauds.SelectedIndex = 6;
             cbPSize.SelectedIndex = 0;
+            tbAddress.SelectedIndex = 0;
             /* set defaul address */
             address = baseAddress;
         }
@@ -296,6 +297,9 @@ namespace STUploader
 
         }
 
+        private void tbAddress_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }
