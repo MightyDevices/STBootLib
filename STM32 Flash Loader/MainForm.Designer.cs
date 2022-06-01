@@ -36,6 +36,7 @@
             this.cbPorts = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.tsslStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslPID = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lProgress = new System.Windows.Forms.Label();
             this.bWrite = new System.Windows.Forms.Button();
@@ -47,7 +48,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.cbxErase = new System.Windows.Forms.CheckBox();
             this.tbAddress = new System.Windows.Forms.ComboBox();
-           // this.tbAddress = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.ttToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.bOpenFile = new System.Windows.Forms.Button();
@@ -110,7 +110,7 @@
             this.cbBauds.Size = new System.Drawing.Size(88, 21);
             this.cbBauds.TabIndex = 1;
             this.ttToolTip.SetToolTip(this.cbBauds, "Baudrate used for communication");
-            this.cbBauds.SelectedIndexChanged += new System.EventHandler(this.cbBauds_SelectedIndexChanged);
+            this.cbBauds.SelectedIndexChanged += new System.EventHandler(this.tbAddress_TextChanged);
             // 
             // cbPorts
             // 
@@ -128,18 +128,26 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsslStatus});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 386);
+            this.tsslStatus,
+            this.tsslPID});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 362);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(315, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.statusStrip1_ItemClicked);
             // 
             // tsslStatus
             // 
             this.tsslStatus.Name = "tsslStatus";
             this.tsslStatus.Size = new System.Drawing.Size(16, 17);
             this.tsslStatus.Text = "   ";
+            // 
+            // tsslPID
+            // 
+            this.tsslPID.Name = "tsslPID";
+            this.tsslPID.Size = new System.Drawing.Size(16, 17);
+            this.tsslPID.Text = "   ";
             // 
             // groupBox3
             // 
@@ -214,6 +222,7 @@
             this.cbPSize.Items.AddRange(new object[] {
             "256",
             "128",
+            "512",
             "2048"});
             this.cbPSize.Location = new System.Drawing.Point(66, 53);
             this.cbPSize.Name = "cbPSize";
@@ -248,16 +257,6 @@
             // 
             // tbAddress
             // 
-            //this.tbAddress.Location = new System.Drawing.Point(66, 20);
-           // this.tbAddress.Name = "tbAddress";
-           // this.tbAddress.Size = new System.Drawing.Size(112, 20);
-            //this.tbAddress.TabIndex = 0;
-           // this.tbAddress.Text = "0x08000000";
-           // this.tbAddress.TextChanged += new System.EventHandler(this.tbAddress_TextChanged);
-           // this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
-
-            // 
-
             this.tbAddress.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tbAddress.FormattingEnabled = true;
             this.tbAddress.Items.AddRange(new object[] {
@@ -265,10 +264,9 @@
             "0x08008000"});
             this.tbAddress.Location = new System.Drawing.Point(66, 20);
             this.tbAddress.Name = "tbAddress";
-            this.tbAddress.Size = new System.Drawing.Size(112, 20);
+            this.tbAddress.Size = new System.Drawing.Size(112, 21);
             this.tbAddress.TabIndex = 1;
             this.ttToolTip.SetToolTip(this.tbAddress, "tbAddress used for communication");
-            this.cbBauds.SelectedIndexChanged += new System.EventHandler(this.tbAddress_TextChanged);
             this.tbAddress.Leave += new System.EventHandler(this.tbAddress_Leave);
             // 
             // label4
@@ -328,7 +326,7 @@
             this.AcceptButton = this.bWrite;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(315, 408);
+            this.ClientSize = new System.Drawing.Size(315, 384);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.statusStrip1);
@@ -338,7 +336,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "fMainForm";
-            this.Text = "Flash bootoader TVN02-05";
+            this.Text = "Flash bootoader TVN";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -381,7 +379,7 @@
         private System.Windows.Forms.Button bJump;
         private System.Windows.Forms.ComboBox cbPSize;
         private System.Windows.Forms.Label label5;
-        
+        private System.Windows.Forms.ToolStripStatusLabel tsslPID;
     }
 }
 

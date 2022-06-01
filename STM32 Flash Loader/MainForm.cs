@@ -203,8 +203,8 @@ namespace STUploader
                 /* initialize communication */
                 await uc.Initialize();
                 /* update the status */
-                UpdateStatus(false, string.Format("Connected: Ver: {0}, PID: 0x{1:X4}",
-                    uc.Version, uc.ProductID));
+                //UpdateStatus2(false, string.Format("Ver: {0}, PID: 0x{1:X4}", uc.Version, uc.ProductID));
+                UpdateStatus2(false, string.Format("Connected: Ver: {0}, PID: 0x{1:X4}", uc.Version, uc.ProductID));
                 /* give some chance see the message */
                 await Task.Delay(500);
 
@@ -232,9 +232,9 @@ namespace STUploader
                 await uc.WriteMemory(address, bin, 0, bin.Length, p,
                     CancellationToken.None);
                 /* update the status */
-                UpdateStatus(false, string.Format("Success: {0} bytes written",
+                UpdateStatus(false, string.Format("Success:{0} bytes",
                     bin.Length));
-
+               // UpdateStatus2(false, string.Format("Ver: {0}, PID: 0x{1:X4}", uc.Version, uc.ProductID));
                 /* go! */
                 await uc.Jump(jumpAddress);
 
@@ -286,7 +286,17 @@ namespace STUploader
                 SystemSounds.Exclamation.Play();
             }
         }
-
+        private void UpdateStatus2(bool ding, string text)
+        {
+            /* text */
+            tsslPID.Text = text;
+            /* play a system sound? */
+            if (ding)
+            {
+                /* ^^ ding! */
+                SystemSounds.Exclamation.Play();
+            }
+        }
         private void cbxErase_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -298,6 +308,16 @@ namespace STUploader
         }
 
         private void tbAddress_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void statusStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
