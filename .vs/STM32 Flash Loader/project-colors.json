@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "f2a80228-9234-4748-a61b-f26d3c1ec7fa": {
+      "ProjectGuid": "f2a80228-9234-4748-a61b-f26d3c1ec7fa",
+      "DisplayName": "STM32 Flash Loader",
+      "ColorIndex": 0
+    },
+    "8ec66a52-5978-481d-a80d-d75cbc6de918": {
+      "ProjectGuid": "8ec66a52-5978-481d-a80d-d75cbc6de918",
+      "DisplayName": "STBootLib",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

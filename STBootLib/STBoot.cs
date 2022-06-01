@@ -83,6 +83,8 @@ namespace STBootLib
 
             /* get product id */
             await GetID();
+            
+
         }
 
         /* unprotect memory */
@@ -349,6 +351,7 @@ namespace STBootLib
                 rx = new byte[nbytes];
                 /* receive response */
                 await SerialRead(rx, 0, rx.Length);
+                
             /* oops, something baaad happened! */
             } catch (Exception) {
                 /* release semaphore */
