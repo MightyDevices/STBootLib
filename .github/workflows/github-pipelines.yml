@@ -1,4 +1,4 @@
-name: CI
+name: Build and Publish STBootLib
 
 on:
   workflow_dispatch:
@@ -36,17 +36,18 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $SOLUTION
 
     - name: Sets env vars for final
+      if: ${{ inputs.release-type == 'final'}}
       run: |
-          echo "VERSIONSUFFIX=''" >> $GITHUB_ENV
-          if: ${{ inputs.release-type ==  final}}
+        echo "VERSIONSUFFIX=''" >> $GITHUB_ENV
+        git tag "$MAJOR.$MINOR.$PATCH-${{github.run_attempt}}"
+        git push origin ${{github.run_id}}
 
     - name: Sets env vars for pre-release
-      run: |
-          echo "VERSIONSUFFIX='pre-${{github.run_attempt}}'" >> $GITHUB_ENV
-          if: ${{ inputs.release-type ==  pre-release}} 
+      if: ${{ inputs.release-type == 'pre-release'}} 
+      run: echo "VERSIONSUFFIX=pre-${{github.run_attempt}}" >> $GITHUB_ENV
 
     - name: Build
       run: dotnet build $SOLUTION --configuration $BUILD_CONFIG -p:VersionPrefix="$MAJOR.$MINOR.$PATCH" -p:VersionSuffix="$VERSIONSUFFIX" --no-restore
@@ -56,7 +57,7 @@ jobs:
     #  run: dotnet test --no-build --verbosity normal
 
     - name: Publish
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_APIKEY}}
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_APIKEY}} -SkipDuplicate
 
 
 
