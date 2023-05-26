@@ -1,6 +1,7 @@
 name: Build and Publish STBootLib
 
 on:
+  # Allow running the workflow manually from the GitHub UI
   workflow_dispatch:
     inputs:
       release-type:
@@ -13,6 +14,7 @@ on:
 
   push:
     branches:
+      - '*'
       - '!master'
  
 jobs:
@@ -21,8 +23,8 @@ jobs:
     env:
       BUILD_CONFIG: 'Release'
       SOLUTION: 'STBootLib.sln'
-      MAJOR: '0'
-      MINOR: '2'
+      MAJOR: '1'
+      MINOR: '0'
       PATCH: '0'
            
     runs-on: ubuntu-latest
@@ -42,12 +44,12 @@ jobs:
       if: ${{ inputs.release-type == 'final'}}
       run: |
         echo "VERSIONSUFFIX=''" >> $GITHUB_ENV
-        git tag "$MAJOR.$MINOR.$PATCH-${{github.run_attempt}}"
+        git tag "$MAJOR.$MINOR.$PATCH-$GITHUB_RUN_ID.$GITHUB_RUN_ATTEMPT"
         git push origin ${{github.run_id}}
 
     - name: Sets env vars for pre-release
-      if: ${{ inputs.release-type == 'pre-release'}} 
-      run: echo "VERSIONSUFFIX=pre-${{github.run_attempt}}" >> $GITHUB_ENV
+      if: ${{ inputs.release-type == '' || inputs.release-type == 'pre-release'}} 
+      run: echo "VERSIONSUFFIX=pre-$GITHUB_RUN_ID.$GITHUB_RUN_ATTEMPT" >> $GITHUB_ENV
 
     - name: Build
       run: dotnet build $SOLUTION --configuration $BUILD_CONFIG -p:VersionPrefix="$MAJOR.$MINOR.$PATCH" -p:VersionSuffix="$VERSIONSUFFIX" --no-restore
