@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: 'Release Type'
+        type: choice
+        options:
+          - pre-release
+          - final
+        default: pre-release
+
+  push:
+    branches:
+      - '!master'
+ 
+jobs:
+  build:
+
+    env:
+      BUILD_CONFIG: 'Release'
+      SOLUTION: 'STBootLib.sln'
+      MAJOR: '0'
+      MINOR: '2'
+      PATCH: '0'
+           
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Sets env vars for final
+      run: |
+          echo "VERSIONSUFFIX=''" >> $GITHUB_ENV
+          if: ${{ inputs.release-type ==  final}}
+
+    - name: Sets env vars for pre-release
+      run: |
+          echo "VERSIONSUFFIX='pre-${{github.run_attempt}}'" >> $GITHUB_ENV
+          if: ${{ inputs.release-type ==  pre-release}} 
+
+    - name: Build
+      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG -p:VersionPrefix="$MAJOR.$MINOR.$PATCH" -p:VersionSuffix="$VERSIONSUFFIX" --no-restore
+
+    # No test available yet
+    #- name: Test
+    #  run: dotnet test --no-build --verbosity normal
+
+    - name: Publish
+      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_APIKEY}}
+
+
+

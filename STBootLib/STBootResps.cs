@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace STBootLib;
 
-namespace STBootLib
+/// <summary>
+/// Response codes.
+/// </summary>
+public enum STResps
 {
-    /* response codes*/
-    public enum STResps
-    {
-        /* command accepted */
-        ACK = 0x79,
-        /* command discarded */
-        NACK = 0x1F,
-    }
+    /// <summary>
+    /// command accepted.
+    /// </summary>
+    ACK = 0x79,
+
+    /// <summary>
+    /// command discarded.
+    /// </summary>
+    NACK = 0x1F,
 }

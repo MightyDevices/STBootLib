@@ -1,11 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STBootLib", "STBootLib\STBootLib.csproj", "{8EC66A52-5978-481D-A80D-D75CBC6DE918}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "STBootLib", "STBootLib\STBootLib.csproj", "{8EC66A52-5978-481D-A80D-D75CBC6DE918}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "STM32 Flash Loader", "STM32 Flash Loader\STM32 Flash Loader.csproj", "{F2A80228-9234-4748-A61B-F26D3C1EC7FA}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FAE52745-75CB-456E-858F-A76DE0588C05}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		.github\workflows\github-pipelines.yml = .github\workflows\github-pipelines.yml
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +25,11 @@ Global
 		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EC66A52-5978-481D-A80D-D75CBC6DE918}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2A80228-9234-4748-A61B-F26D3C1EC7FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2A80228-9234-4748-A61B-F26D3C1EC7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2A80228-9234-4748-A61B-F26D3C1EC7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2A80228-9234-4748-A61B-F26D3C1EC7FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {427B9179-6469-45A9-BF64-D66B47718AD0}
 	EndGlobalSection
 EndGlobal

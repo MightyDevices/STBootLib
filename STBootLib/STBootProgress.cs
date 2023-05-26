@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace STBootLib;
 
-namespace STBootLib
+/// <summary>
+/// Boot progress.
+/// </summary>
+public class STBootProgress
 {
-    public class STBootProgress
+    /// <summary>
+    /// Initializes a new instance of the <see cref="STBootProgress"/> class.
+    /// </summary>
+    /// <param name="bytesProcessed">The bytes processed.</param>
+    /// <param name="bytesTotal">The bytes total.</param>
+    public STBootProgress(int bytesProcessed, int bytesTotal)
     {
-        /* total number of bytes */
-        public readonly int bytesTotal;
-        /* number of bytes processed */
-        public readonly int bytesProcessed;
-
-        public STBootProgress(int bytesProcessed, int bytesTotal)
-        {
-            /* set the number of bytes processed */
-            this.bytesProcessed = bytesProcessed;
-            /* set the total number of bytes */
-            this.bytesTotal = bytesTotal;
-        }
+        this.BytesProcessed = bytesProcessed;
+        this.BytesTotal = bytesTotal;
     }
+
+    /// <summary>
+    /// Gets the total bytes.
+    /// </summary>
+    public int BytesTotal { get; }
+
+    /// <summary>
+    /// Gets the bytes processed.
+    /// </summary>
+    public int BytesProcessed { get; }
 }

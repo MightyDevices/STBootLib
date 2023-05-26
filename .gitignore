@@ -19,6 +19,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+# Visual Studio 2015 cache/options directory
+.vs/
+
 # Roslyn cache directories
 *.ide/
 
@@ -87,7 +90,7 @@ _ReSharper*/
 *.[Rr]e[Ss]harper
 *.DotSettings.user
 
-# JustCode is a .NET coding addin-in
+# JustCode is a .NET coding add-in
 .JustCode
 
 # TeamCity is a build add-in

@@ -1,22 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace STBootLib
+namespace STBootLib;
+
+/// <summary>
+/// Boot Exception.
+/// </summary>
+public class STBootException : Exception
 {
-    public class STBootException : Exception
+    /// <summary>
+    /// Initializes a new instance of the <see cref="STBootException"/> class.
+    /// </summary>
+    public STBootException()
     {
-        /* constructor */
-        public STBootException()
-        {
-        }
+    }
 
-        /* with message */
-        public STBootException(string message)
-            : base(message)
-        {
-        }
+    /// <summary>
+    /// Initializes a new instance of the <see cref="STBootException"/> class.
+    /// </summary>
+    /// <param name="message">The message.</param>
+    public STBootException(string message)
+        : base(message)
+    {
     }
 }

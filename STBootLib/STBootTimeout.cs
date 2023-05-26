@@ -1,31 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace STBootLib
+namespace STBootLib;
+
+/// <summary>
+/// Boot timeout used for canceling.
+/// </summary>
+public static class STBootTimeout
 {
-    static class STBootTimeout
+    /// <summary>
+    /// Executes a task with timeout.
+    /// </summary>
+    /// <typeparam name="T">The response type of the task.</typeparam>
+    /// <param name="task">The task.</param>
+    /// <param name="timeout">The timeout.</param>
+    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    public static async Task<T> WithTimeout<T>(this Task<T> task, int timeout)
     {
+        var cts = new CancellationTokenSource(timeout);
+        var tcs = new TaskCompletionSource<bool>();
 
-        /* used for cancelling */
-        public static async Task<T> WithTimeout<T>(this Task<T> task, int timeout)
+        using (cts.Token.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))
         {
-            /* cancellation token source with timeout */
-            var cts = new CancellationTokenSource(timeout);
-            /* task completition source */
-            var tcs = new TaskCompletionSource<bool>();
-
-            using (cts.Token.Register(s => 
-                ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs)) {
-                /* timeout occured? or task finished normally? */
-                if (task != await Task.WhenAny(task, tcs.Task))
-                    throw new OperationCanceledException();
+            // timeout occurred? or task finished normally?
+            if (task != await Task.WhenAny(task, tcs.Task))
+            {
+                throw new OperationCanceledException();
             }
-
-            return await task;
         }
+
+        return await task;
     }
 }
